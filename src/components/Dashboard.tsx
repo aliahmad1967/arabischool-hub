@@ -35,28 +35,32 @@ export const Dashboard = ({ username, role, onLogout, onNavigate }: DashboardPro
       value: "1,247",
       icon: Users,
       color: "text-primary",
-      bgColor: "bg-primary/10"
+      bgColor: "bg-primary/10",
+      action: "students"
     },
     {
       title: "عدد المعلمين",
       value: "89",
       icon: GraduationCap,
       color: "text-accent",
-      bgColor: "bg-accent/10"
+      bgColor: "bg-accent/10",
+      action: "teachers"
     },
     {
       title: "نسبة الحضور اليومي",
       value: "94.2%",
       icon: CalendarCheck,
       color: "text-primary-glow",
-      bgColor: "bg-primary-glow/10"
+      bgColor: "bg-primary-glow/10",
+      action: "attendance"
     },
     {
       title: "الأداء الأسبوعي",
       value: "87.5%",
       icon: TrendingUp,
       color: "text-accent",
-      bgColor: "bg-accent/10"
+      bgColor: "bg-accent/10",
+      action: "grades"
     }
   ];
 
@@ -126,14 +130,18 @@ export const Dashboard = ({ username, role, onLogout, onNavigate }: DashboardPro
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat, index) => (
-            <Card key={index} className="shadow-card border-0 transition-smooth hover:shadow-soft">
+            <Card 
+              key={index} 
+              className="shadow-card border-0 transition-smooth hover:shadow-soft cursor-pointer hover:border-primary/50" 
+              onClick={() => handleQuickAction(stat.action)}
+            >
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="text-arabic">
                     <p className="text-sm text-muted-foreground mb-1">{stat.title}</p>
                     <p className="text-2xl font-bold">{stat.value}</p>
                   </div>
-                  <div className={`w-12 h-12 rounded-full ${stat.bgColor} flex items-center justify-center`}>
+                  <div className={`w-12 h-12 rounded-full ${stat.bgColor} flex items-center justify-center transition-smooth hover:scale-110`}>
                     <stat.icon className={`w-6 h-6 ${stat.color}`} />
                   </div>
                 </div>
