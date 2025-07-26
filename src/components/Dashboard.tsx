@@ -15,9 +15,10 @@ interface DashboardProps {
   username: string;
   role: string;
   onLogout: () => void;
+  onNavigate?: (view: string) => void;
 }
 
-export const Dashboard = ({ username, role, onLogout }: DashboardProps) => {
+export const Dashboard = ({ username, role, onLogout, onNavigate }: DashboardProps) => {
   const getRoleInArabic = (role: string) => {
     switch (role) {
       case "admin": return "مدير";
@@ -64,39 +65,37 @@ export const Dashboard = ({ username, role, onLogout }: DashboardProps) => {
       title: "إدارة الطلاب",
       description: "عرض وإدارة بيانات الطلاب",
       icon: Users,
-      color: "bg-gradient-primary"
+      color: "bg-gradient-primary",
+      action: "students"
+    },
+    {
+      title: "إدارة المعلمين",
+      description: "عرض وإدارة بيانات المعلمين",
+      icon: GraduationCap,
+      color: "bg-gradient-success",
+      action: "teachers"
     },
     {
       title: "تسجيل الحضور",
       description: "متابعة حضور وغياب الطلاب",
       icon: CalendarCheck,
-      color: "bg-gradient-success"
+      color: "bg-gradient-warm",
+      action: "attendance"
     },
     {
       title: "إدارة الدرجات",
       description: "إدخال ومتابعة درجات الطلاب",
       icon: BookOpen,
-      color: "bg-gradient-warm"
-    },
-    {
-      title: "الرسوم الدراسية",
-      description: "متابعة المدفوعات والرسوم",
-      icon: DollarSign,
-      color: "bg-gradient-primary"
-    },
-    {
-      title: "الإشعارات",
-      description: "إرسال ومتابعة الإشعارات",
-      icon: Bell,
-      color: "bg-gradient-success"
-    },
-    {
-      title: "الرسائل",
-      description: "التواصل مع أولياء الأمور",
-      icon: MessageSquare,
-      color: "bg-gradient-warm"
+      color: "bg-gradient-primary",
+      action: "grades"
     }
   ];
+
+  const handleQuickAction = (actionType: string) => {
+    if (onNavigate) {
+      onNavigate(actionType);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -154,6 +153,7 @@ export const Dashboard = ({ username, role, onLogout }: DashboardProps) => {
                 <div
                   key={index}
                   className="group p-6 rounded-lg border border-border hover:border-primary/50 transition-smooth cursor-pointer hover:shadow-card"
+                  onClick={() => handleQuickAction(action.action)}
                 >
                   <div className="flex items-start space-x-4 space-x-reverse">
                     <div className={`w-12 h-12 rounded-lg ${action.color} flex items-center justify-center transition-smooth group-hover:scale-110`}>

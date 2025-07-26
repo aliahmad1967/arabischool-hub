@@ -47,7 +47,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {currentView === 'dashboard' ? (
-        <Dashboard username={user.username} role={user.role} onLogout={handleLogout} />
+        <Dashboard username={user.username} role={user.role} onLogout={handleLogout} onNavigate={setCurrentView} />
       ) : (
         <>
           <header className="bg-card border-b shadow-card">
