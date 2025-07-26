@@ -1,5 +1,9 @@
 # Welcome to your Lovable project
+## for login
+##  user: admin
+##  pass: admin
 
+  
 ## Project info
 
 **URL**: https://lovable.dev/projects/8c26f84f-3276-413d-80a1-52dbcc3c888b
