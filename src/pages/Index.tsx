@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LoginForm } from "@/components/LoginForm";
 import { Dashboard } from "@/components/Dashboard";
 import { Navigation } from "@/components/Navigation";
@@ -6,11 +6,20 @@ import { StudentManagement } from "@/components/StudentManagement";
 import { TeacherManagement } from "@/components/TeacherManagement";
 import { AttendanceManagement } from "@/components/AttendanceManagement";
 import { GradesManagement } from "@/components/GradesManagement";
+import { Student, Teacher, AttendanceRecord, Grade } from "@/types";
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<{ username: string; role: string } | null>(null);
   const [currentView, setCurrentView] = useState("dashboard");
+  
+  // Initial data for statistics
+  const initialStats = {
+    totalStudents: 3, // Based on StudentManagement default data
+    totalTeachers: 3, // Based on TeacherManagement default data
+    attendanceRate: "66.7%", // Based on AttendanceManagement default data (2 out of 3 students present)
+    avgGrade: "78.3%" // Based on GradesManagement default data average
+  };
 
   const handleLogin = (username: string, role: string) => {
     setUser({ username, role });
@@ -30,7 +39,7 @@ const Index = () => {
   const renderCurrentView = () => {
     switch (currentView) {
       case 'dashboard':
-        return <Dashboard username={user.username} role={user.role} onLogout={handleLogout} />;
+        return <Dashboard username={user.username} role={user.role} onLogout={handleLogout} onNavigate={setCurrentView} stats={initialStats} />;
       case 'students':
         return <StudentManagement />;
       case 'teachers':
@@ -40,14 +49,14 @@ const Index = () => {
       case 'grades':
         return <GradesManagement />;
       default:
-        return <Dashboard username={user.username} role={user.role} onLogout={handleLogout} />;
+        return <Dashboard username={user.username} role={user.role} onLogout={handleLogout} onNavigate={setCurrentView} stats={initialStats} />;
     }
   };
 
   return (
     <div className="min-h-screen bg-background">
       {currentView === 'dashboard' ? (
-        <Dashboard username={user.username} role={user.role} onLogout={handleLogout} onNavigate={setCurrentView} />
+        <Dashboard username={user.username} role={user.role} onLogout={handleLogout} onNavigate={setCurrentView} stats={initialStats} />
       ) : (
         <>
           <header className="bg-card border-b shadow-card">

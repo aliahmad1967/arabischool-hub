@@ -16,9 +16,15 @@ interface DashboardProps {
   role: string;
   onLogout: () => void;
   onNavigate?: (view: string) => void;
+  stats?: {
+    totalStudents: number;
+    totalTeachers: number;
+    attendanceRate: string;
+    avgGrade: string;
+  };
 }
 
-export const Dashboard = ({ username, role, onLogout, onNavigate }: DashboardProps) => {
+export const Dashboard = ({ username, role, onLogout, onNavigate, stats: realStats }: DashboardProps) => {
   const getRoleInArabic = (role: string) => {
     switch (role) {
       case "admin": return "مدير";
@@ -29,10 +35,10 @@ export const Dashboard = ({ username, role, onLogout, onNavigate }: DashboardPro
     }
   };
 
-  const stats = [
+  const statsData = [
     {
       title: "عدد الطلاب الكلي",
-      value: "1,247",
+      value: realStats?.totalStudents.toString() || "0",
       icon: Users,
       color: "text-primary",
       bgColor: "bg-primary/10",
@@ -40,7 +46,7 @@ export const Dashboard = ({ username, role, onLogout, onNavigate }: DashboardPro
     },
     {
       title: "عدد المعلمين",
-      value: "89",
+      value: realStats?.totalTeachers.toString() || "0",
       icon: GraduationCap,
       color: "text-accent",
       bgColor: "bg-accent/10",
@@ -48,15 +54,15 @@ export const Dashboard = ({ username, role, onLogout, onNavigate }: DashboardPro
     },
     {
       title: "نسبة الحضور اليومي",
-      value: "94.2%",
+      value: realStats?.attendanceRate || "0%",
       icon: CalendarCheck,
       color: "text-primary-glow",
       bgColor: "bg-primary-glow/10",
       action: "attendance"
     },
     {
-      title: "الأداء الأسبوعي",
-      value: "87.5%",
+      title: "متوسط الدرجات",
+      value: realStats?.avgGrade || "0%",
       icon: TrendingUp,
       color: "text-accent",
       bgColor: "bg-accent/10",
@@ -129,7 +135,7 @@ export const Dashboard = ({ username, role, onLogout, onNavigate }: DashboardPro
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => (
+          {statsData.map((stat, index) => (
             <Card 
               key={index} 
               className="shadow-card border-0 transition-smooth hover:shadow-soft cursor-pointer hover:border-primary/50" 
