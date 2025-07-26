@@ -29,6 +29,8 @@ const Index = () => {
 
   const renderCurrentView = () => {
     switch (currentView) {
+      case 'dashboard':
+        return <Dashboard username={user.username} role={user.role} onLogout={handleLogout} />;
       case 'students':
         return <StudentManagement />;
       case 'teachers':
