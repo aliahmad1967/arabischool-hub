@@ -10,42 +10,12 @@ import { useToast } from "@/hooks/use-toast";
 import { Teacher } from "@/types";
 import { Plus, Edit, Trash2, Search, GraduationCap, Phone, Mail } from "lucide-react";
 
-export const TeacherManagement = () => {
-  const [teachers, setTeachers] = useState<Teacher[]>([
-    {
-      id: '1',
-      name: 'أستاذ محمد أحمد',
-      teacherId: 'TCH001',
-      subject: 'الرياضيات',
-      phone: '0501234567',
-      email: 'mohamed.ahmed@school.edu',
-      hireDate: '2020-09-01',
-      salary: 8000,
-      classes: ['الصف السادس أ', 'الصف السادس ب']
-    },
-    {
-      id: '2',
-      name: 'أستاذة فاطمة سالم',
-      teacherId: 'TCH002',
-      subject: 'اللغة العربية',
-      phone: '0507654321',
-      email: 'fatima.salem@school.edu',
-      hireDate: '2019-09-01',
-      salary: 7500,
-      classes: ['الصف الخامس أ', 'الصف الخامس ب']
-    },
-    {
-      id: '3',
-      name: 'أستاذ عبدالله محمد',
-      teacherId: 'TCH003',
-      subject: 'العلوم',
-      phone: '0551122334',
-      email: 'abdullah.mohamed@school.edu',
-      hireDate: '2021-09-01',
-      salary: 7000,
-      classes: ['الصف الرابع أ']
-    }
-  ]);
+interface TeacherManagementProps {
+  teachers: Teacher[];
+  setTeachers: React.Dispatch<React.SetStateAction<Teacher[]>>;
+}
+
+export const TeacherManagement = ({ teachers, setTeachers }: TeacherManagementProps) => {
 
   const [editingTeacher, setEditingTeacher] = useState<Teacher | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);

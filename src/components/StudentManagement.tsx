@@ -10,45 +10,12 @@ import { useToast } from "@/hooks/use-toast";
 import { Student } from "@/types";
 import { Plus, Edit, Trash2, Search, User } from "lucide-react";
 
-export const StudentManagement = () => {
-  const [students, setStudents] = useState<Student[]>([
-    {
-      id: '1',
-      name: 'أحمد محمد علي',
-      studentId: 'STD001',
-      grade: 'الصف السادس',
-      class: 'أ',
-      dateOfBirth: '2012-05-15',
-      parentName: 'محمد علي أحمد',
-      parentPhone: '0501234567',
-      address: 'الرياض، حي النزهة',
-      enrollmentDate: '2023-09-01'
-    },
-    {
-      id: '2',
-      name: 'فاطمة أحمد حسن',
-      studentId: 'STD002',
-      grade: 'الصف الخامس',
-      class: 'ب',
-      dateOfBirth: '2013-08-22',
-      parentName: 'أحمد حسن محمد',
-      parentPhone: '0507654321',
-      address: 'جدة، حي الصفا',
-      enrollmentDate: '2023-09-01'
-    },
-    {
-      id: '3',
-      name: 'محمد عبدالله سالم',
-      studentId: 'STD003',
-      grade: 'الصف السادس',
-      class: 'أ',
-      dateOfBirth: '2012-12-10',
-      parentName: 'عبدالله سالم أحمد',
-      parentPhone: '0551122334',
-      address: 'الدمام، حي الفيصلية',
-      enrollmentDate: '2023-09-01'
-    }
-  ]);
+interface StudentManagementProps {
+  students: Student[];
+  setStudents: React.Dispatch<React.SetStateAction<Student[]>>;
+}
+
+export const StudentManagement = ({ students, setStudents }: StudentManagementProps) => {
 
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);

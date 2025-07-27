@@ -7,57 +7,22 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { AttendanceRecord, AttendanceStatus } from "@/types";
+import { AttendanceRecord, AttendanceStatus, Student } from "@/types";
 import { CalendarCheck, Search, CheckCircle, XCircle, Clock, AlertCircle } from "lucide-react";
 
-export const AttendanceManagement = () => {
+interface AttendanceManagementProps {
+  students: Student[];
+  attendanceRecords: AttendanceRecord[];
+  setAttendanceRecords: React.Dispatch<React.SetStateAction<AttendanceRecord[]>>;
+}
+
+export const AttendanceManagement = ({ students, attendanceRecords, setAttendanceRecords }: AttendanceManagementProps) => {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [selectedGrade, setSelectedGrade] = useState("all");
   const [selectedClass, setSelectedClass] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
 
-  const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>([
-    {
-      id: '1',
-      studentId: 'STD001',
-      studentName: 'أحمد محمد علي',
-      date: new Date().toISOString().split('T')[0],
-      status: 'present',
-      grade: 'الصف السادس',
-      class: 'أ',
-      notes: ''
-    },
-    {
-      id: '2',
-      studentId: 'STD002',
-      studentName: 'فاطمة أحمد حسن',
-      date: new Date().toISOString().split('T')[0],
-      status: 'absent',
-      grade: 'الصف الخامس',
-      class: 'ب',
-      notes: 'مرض'
-    },
-    {
-      id: '3',
-      studentId: 'STD003',
-      studentName: 'محمد عبدالله سالم',
-      date: new Date().toISOString().split('T')[0],
-      status: 'late',
-      grade: 'الصف السادس',
-      class: 'أ',
-      notes: 'تأخر في المواصلات'
-    }
-  ]);
-
-  // بيانات الطلاب المتاحة
-  const allStudents = [
-    { id: 'STD001', name: 'أحمد محمد علي', grade: 'الصف السادس', class: 'أ' },
-    { id: 'STD002', name: 'فاطمة أحمد حسن', grade: 'الصف الخامس', class: 'ب' },
-    { id: 'STD003', name: 'محمد عبدالله سالم', grade: 'الصف السادس', class: 'أ' },
-    { id: 'STD004', name: 'سارة علي أحمد', grade: 'الصف السادس', class: 'أ' },
-    { id: 'STD005', name: 'يوسف محمد حسن', grade: 'الصف الخامس', class: 'ب' }
-  ];
 
   const updateAttendance = (studentId: string, status: AttendanceStatus, notes?: string) => {
     setAttendanceRecords(prev => {
@@ -72,7 +37,7 @@ export const AttendanceManagement = () => {
             : record
         );
       } else {
-        const student = allStudents.find(s => s.id === studentId);
+        const student = students.find(s => s.studentId === studentId);
         if (!student) return prev;
         
         const newRecord: AttendanceRecord = {
@@ -131,9 +96,9 @@ export const AttendanceManagement = () => {
   };
 
   // فلترة الطلاب حسب الخيارات المحددة
-  const filteredStudents = allStudents.filter(student => {
+  const filteredStudents = students.filter(student => {
     const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.id.toLowerCase().includes(searchTerm.toLowerCase());
+                         student.studentId.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesGrade = selectedGrade === 'all' || student.grade === selectedGrade;
     const matchesClass = selectedClass === 'all' || student.class === selectedClass;
     
@@ -264,9 +229,9 @@ export const AttendanceManagement = () => {
                   variant="success"
                   size="sm"
                   onClick={() => {
-                    filteredStudents.forEach(student => 
-                      updateAttendance(student.id, 'present')
-                    );
+                   filteredStudents.forEach(student => 
+                     updateAttendance(student.studentId, 'present')
+                   );
                   }}
                   className="text-arabic text-xs"
                 >
@@ -290,13 +255,13 @@ export const AttendanceManagement = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredStudents.map((student) => {
-                  const attendanceRecord = todayRecords.find(r => r.studentId === student.id);
-                  const currentStatus = attendanceRecord?.status;
-                  
-                  return (
-                    <TableRow key={student.id}>
-                      <TableCell className="font-medium">{student.id}</TableCell>
+                 {filteredStudents.map((student) => {
+                   const attendanceRecord = todayRecords.find(r => r.studentId === student.studentId);
+                   const currentStatus = attendanceRecord?.status;
+                   
+                   return (
+                     <TableRow key={student.id}>
+                       <TableCell className="font-medium">{student.studentId}</TableCell>
                       <TableCell className="text-arabic">{student.name}</TableCell>
                       <TableCell className="text-arabic">{student.grade}</TableCell>
                       <TableCell className="text-arabic">{student.class}</TableCell>
@@ -319,32 +284,32 @@ export const AttendanceManagement = () => {
                           <Button
                             variant={currentStatus === 'present' ? 'default' : 'outline'}
                             size="sm"
-                            onClick={() => updateAttendance(student.id, 'present')}
-                            className="text-xs"
-                          >
-                            <CheckCircle className="w-3 h-3" />
-                          </Button>
-                          <Button
-                            variant={currentStatus === 'absent' ? 'destructive' : 'outline'}
-                            size="sm"
-                            onClick={() => updateAttendance(student.id, 'absent')}
-                            className="text-xs"
-                          >
-                            <XCircle className="w-3 h-3" />
-                          </Button>
-                          <Button
-                            variant={currentStatus === 'late' ? 'secondary' : 'outline'}
-                            size="sm"
-                            onClick={() => updateAttendance(student.id, 'late')}
-                            className="text-xs"
-                          >
-                            <Clock className="w-3 h-3" />
-                          </Button>
-                          <Button
-                            variant={currentStatus === 'excused' ? 'default' : 'outline'}
-                            size="sm"
-                            onClick={() => updateAttendance(student.id, 'excused')}
-                            className="text-xs"
+                           onClick={() => updateAttendance(student.studentId, 'present')}
+                           className="text-xs"
+                         >
+                           <CheckCircle className="w-3 h-3" />
+                         </Button>
+                         <Button
+                           variant={currentStatus === 'absent' ? 'destructive' : 'outline'}
+                           size="sm"
+                           onClick={() => updateAttendance(student.studentId, 'absent')}
+                           className="text-xs"
+                         >
+                           <XCircle className="w-3 h-3" />
+                         </Button>
+                         <Button
+                           variant={currentStatus === 'late' ? 'secondary' : 'outline'}
+                           size="sm"
+                           onClick={() => updateAttendance(student.studentId, 'late')}
+                           className="text-xs"
+                         >
+                           <Clock className="w-3 h-3" />
+                         </Button>
+                         <Button
+                           variant={currentStatus === 'excused' ? 'default' : 'outline'}
+                           size="sm"
+                           onClick={() => updateAttendance(student.studentId, 'excused')}
+                           className="text-xs"
                           >
                             <AlertCircle className="w-3 h-3" />
                           </Button>

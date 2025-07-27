@@ -9,54 +9,16 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Grade, ExamType } from "@/types";
+import { Grade, ExamType, Student } from "@/types";
 import { Plus, Edit, Trash2, Search, BookOpen, TrendingUp, Award } from "lucide-react";
 
-export const GradesManagement = () => {
-  const [grades, setGrades] = useState<Grade[]>([
-    {
-      id: '1',
-      studentId: 'STD001',
-      studentName: 'أحمد محمد علي',
-      subject: 'الرياضيات',
-      examType: 'midterm',
-      score: 85,
-      maxScore: 100,
-      date: '2024-01-15',
-      grade: 'الصف السادس',
-      class: 'أ',
-      teacherId: 'TCH001',
-      notes: 'أداء ممتاز'
-    },
-    {
-      id: '2',
-      studentId: 'STD002',
-      studentName: 'فاطمة أحمد حسن',
-      subject: 'اللغة العربية',
-      examType: 'final',
-      score: 92,
-      maxScore: 100,
-      date: '2024-01-20',
-      grade: 'الصف الخامس',
-      class: 'ب',
-      teacherId: 'TCH002',
-      notes: 'متفوقة'
-    },
-    {
-      id: '3',
-      studentId: 'STD003',
-      studentName: 'محمد عبدالله سالم',
-      subject: 'العلوم',
-      examType: 'quiz',
-      score: 78,
-      maxScore: 100,
-      date: '2024-01-10',
-      grade: 'الصف السادس',
-      class: 'أ',
-      teacherId: 'TCH003',
-      notes: 'يحتاج لمزيد من المراجعة'
-    }
-  ]);
+interface GradesManagementProps {
+  students: Student[];
+  grades: Grade[];
+  setGrades: React.Dispatch<React.SetStateAction<Grade[]>>;
+}
+
+export const GradesManagement = ({ students, grades, setGrades }: GradesManagementProps) => {
 
   const [editingGrade, setEditingGrade] = useState<Grade | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -79,12 +41,7 @@ export const GradesManagement = () => {
     notes: ''
   });
 
-  // بيانات الطلاب والمعلمين المتاحة
-  const students = [
-    { id: 'STD001', name: 'أحمد محمد علي', grade: 'الصف السادس', class: 'أ' },
-    { id: 'STD002', name: 'فاطمة أحمد حسن', grade: 'الصف الخامس', class: 'ب' },
-    { id: 'STD003', name: 'محمد عبدالله سالم', grade: 'الصف السادس', class: 'أ' }
-  ];
+  // بيانات المواد المتاحة
 
   const subjects = ['الرياضيات', 'اللغة العربية', 'العلوم', 'التاريخ', 'الجغرافيا', 'اللغة الإنجليزية'];
 
@@ -130,7 +87,7 @@ export const GradesManagement = () => {
       });
     } else {
       // إضافة درجة جديدة
-      const selectedStudent = students.find(s => s.id === formData.studentId);
+      const selectedStudent = students.find(s => s.studentId === formData.studentId);
       if (!selectedStudent) return;
 
       const newGrade: Grade = {
@@ -275,30 +232,30 @@ export const GradesManagement = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label className="text-arabic">الطالب *</Label>
-                      <Select 
-                        value={formData.studentId || ''} 
-                        onValueChange={(value) => {
-                          const student = students.find(s => s.id === value);
-                          setFormData({
-                            ...formData, 
-                            studentId: value,
-                            studentName: student?.name || '',
-                            grade: student?.grade || '',
-                            class: student?.class || ''
-                          });
-                        }}
-                      >
-                        <SelectTrigger className="text-arabic">
-                          <SelectValue placeholder="اختر الطالب" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {students.map(student => (
-                            <SelectItem key={student.id} value={student.id}>
-                              {student.name} - {student.grade} {student.class}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                       <Select 
+                         value={formData.studentId || ''} 
+                         onValueChange={(value) => {
+                           const student = students.find(s => s.studentId === value);
+                           setFormData({
+                             ...formData, 
+                             studentId: value,
+                             studentName: student?.name || '',
+                             grade: student?.grade || '',
+                             class: student?.class || ''
+                           });
+                         }}
+                       >
+                         <SelectTrigger className="text-arabic">
+                           <SelectValue placeholder="اختر الطالب" />
+                         </SelectTrigger>
+                         <SelectContent>
+                           {students.map(student => (
+                             <SelectItem key={student.id} value={student.studentId}>
+                               {student.name} - {student.grade} {student.class}
+                             </SelectItem>
+                           ))}
+                         </SelectContent>
+                       </Select>
                     </div>
                     <div className="space-y-2">
                       <Label className="text-arabic">المادة *</Label>
